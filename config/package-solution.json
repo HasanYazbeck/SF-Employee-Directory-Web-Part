@@ -1,0 +1,42 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+    "solution": {
+        "name": "sf-employee-directory-webpart-client-side-solution",
+        "id": "aff912b8-3698-408c-9208-d48ed5c4a54e",
+        "version": "1.0.0.0",
+        "includeClientSideAssets": true,
+        "skipFeatureDeployment": true,
+        "isDomainIsolated": false,
+        "developer": {
+            "name": "",
+            "websiteUrl": "",
+            "privacyUrl": "",
+            "termsOfUseUrl": "",
+            "mpnId": "Undefined-1.19.0"
+        },
+        "metadata": {
+            "shortDescription": {
+                "default": "sf-employee-directory-webpart description"
+            },
+            "longDescription": {
+                "default": "sf-employee-directory-webpart description"
+            },
+            "screenshotPaths": [],
+            "videoUrl": "",
+            "categories": []
+        },
+        "features": [{
+            "title": "sf-employee-directory-webpart Feature",
+            "description": "The feature that activates elements of the sf-employee-directory-webpart solution.",
+            "id": "99212f39-9549-4bc2-9c6d-65e9a6ace754",
+            "version": "1.0.0.0"
+        }],
+        "webApiPermissionRequests": [{
+            "resource": "Microsoft Graph",
+            "scope": "User.ReadBasic.All"
+        }]
+    },
+    "paths": {
+        "zippedPackage": "solution/sf-employee-directory-webpart.sppkg"
+    }
+}

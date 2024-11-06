@@ -1,0 +1,328 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+.employeeDirectory {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    padding: 1em;
+    color: "[theme:bodyText, default: #323130]";
+    color: var(--bodyText);
+    &.teams {
+        font-family: $ms-font-family-fallbacks;
+    }
+}
+
+.welcome {
+    text-align: center;
+}
+
+.welcomeImage {
+    width: 100%;
+    max-width: 420px;
+}
+
+.links {
+    a {
+        text-decoration: none;
+        color: "[theme:link, default:#03787c]";
+        color: var(--link);
+        &:hover {
+            text-decoration: underline;
+            color: "[theme:linkHovered, default: #014446]";
+            color: var(--linkHovered);
+        }
+    }
+}
+
+.employees {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: unset !important;
+}
+
+.employee {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    width: 90%;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.employeeInfo {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.employee h2,
+.employee p,
+.employee h5 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.employee:hover {
+    transform: translateY(-5px);
+}
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    height: 25px;
+}
+
+.navButtons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.navButtons button {
+    padding: 3px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: relative;
+    width: 15px;
+    height: 15px;
+}
+
+.navButtons img {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.csvExportButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    width: 15px;
+    height: 15px;
+}
+
+.csvExportButton img {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.navTitle {
+    margin: 0;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding-left: 3%;
+}
+
+.profileImg {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.profileImg img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}
+
+.emailContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+    padding: 2px 0;
+}
+
+.emailWrapper {
+    color: inherit;
+}
+
+.scrollContainer {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.emailText {
+    color: inherit;
+}
+
+.tableBody {
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+}
+
+.tableRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.headerRow {
+    font-weight: bold;
+    background-color: #f3f2f1;
+    color: #5865F2;
+}
+
+.tableCell {
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: left;
+    padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:nth-child(1) {
+        width: 20%;
+    }
+    &:nth-child(2) {
+        width: 20%;
+    }
+    &:nth-child(3) {
+        width: 20%;
+    }
+    &:nth-child(4) {
+        width: 20%;
+    }
+    &:nth-child(5) {
+        width: 10%;
+    }
+    &:nth-child(6) {
+        width: 10%;
+    }
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.actionButtons {
+    color: inherit;
+}
+
+.qrActions {
+    color: inherit;
+}
+
+.qrActionButton {
+    color: inherit;
+}
+
+.qrContainer {
+    color: inherit;
+}
+
+.qrToggleButton {
+    color: inherit;
+}
+
+.qrCode {
+    color: inherit;
+}
+
+.qrCloseButton {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.qrCloseContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.userCount {
+    margin: 0 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.infoSection {
+    color: inherit;
+}
+
+.nameSection {
+    color: inherit;
+}
+
+.orgTree {
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: $ms-color-themePrimary;
+    }
+}
+
+.treeNode {
+    margin-bottom: 10px;
+}
+
+.nodeContent {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.expandIcon {
+    margin-right: 5px;
+}
+
+.nodeName {
+    font-weight: bold;
+}
+
+.nodeTitle {
+    margin-left: 10px;
+    color: grey;
+}
+
+.childNodes {
+    margin-left: 20px; // Indent the child nodes
+    border-left: 1px solid #ccc; // Optional, adds a vertical line to indicate hierarchy
+    padding-left: 10px;
+}
+
+.modalContainer {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; // Handle content overflow
+    max-height:fit-content; // Limit the modal height to fit within the viewport
+}

@@ -1,0 +1,95 @@
+const buildOrgTree = (
+      users: IUser[],
+      selectedUser: IUser
+    ): IOrgTreeNode | null => {
+      const userMap = new Map<string, IOrgTreeNode>();
+
+      // Create the userMap with all users
+      users.forEach((user) => {
+        userMap.set(user.id, {
+          id: user.id,
+          displayName: user.displayName,
+          jobTitle: user.jobTitle,
+          children: [],
+        });
+      });
+
+      let root: IOrgTreeNode | null = null;
+
+      // If the selected user has a manager, set the manager as the root
+           if (selectedUser && selectedUser.manager && selectedUser.manager.id) {
+        let currentNode = userMap.get(selectedUser.id);
+    
+        // Walk up the hierarchy
+        while (currentNode) {
+          const managerId = users.find((user) => user.id === currentNode!.id)?.managerId;
+    
+          if (!managerId) {
+            root = currentNode;
+            break; // No manager found, stop here
+          }
+    
+          const managerNode = userMap.get(
+            typeof managerId === 'string' ? managerId : managerId.id
+          ); 
+          if (!managerNode) {
+            root = currentNode;
+            break; // Stop if the manager is not in the userMap
+          }
+      // Add the currentNode as a child of its manager
+          managerNode.children.push(currentNode);
+          root = managerNode;
+    
+          // Move up to the next manager
+          currentNode = managerNode;
+        }
+        const managerNode = userMap.get(selectedUser.manager.id);
+        const selectedNode = userMap.get(selectedUser.id);
+
+        // If both the manager and selected user are found in the user map
+        if (managerNode && selectedNode) {
+          root = managerNode; // Set the manager as the root
+          managerNode.children.push(selectedNode); // Add the selected user as a child
+        }
+      } else {
+        // If no manager, show who the selected user manages
+        const managedUsers = users.filter(
+          (user) => user.managerId === selectedUser.id
+        );
+        const selectedNode = userMap.get(selectedUser.id);
+
+        // Set the selected user as the root and add their managed users
+        if (selectedNode) {
+          root = selectedNode; // Set the selected user as the root
+          if (managedUsers.length > 0) {
+            // Only add managed users if there are any
+            managedUsers.forEach((managedUser) => {
+              const managedNode = userMap.get(managedUser.id);
+              if (managedNode) {
+                selectedNode.children.push(managedNode);
+              }
+            });
+          }
+        }
+      }
+
+      // Handle cases where no tree structure was built, avoiding crashes
+      if (!root) {
+        return null;
+      }
+
+      // Iterate through the users to build the remaining org tree
+      users.forEach((user) => {
+        const node = userMap.get(user.id);
+        if (node) {
+          if (user.manager && user.manager.id && userMap.has(user.manager.id)) {
+            const managerNode = userMap.get(user.manager.id);
+            if (managerNode && managerNode !== root) {
+              managerNode.children.push(node);
+            }
+          }
+        }
+      });
+
+      return root;
+    };

@@ -1,0 +1,365 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+.employeeDirectory {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    padding: 1em;
+    color: "[theme:bodyText, default: #323130]";
+    color: var(--bodyText);
+    &.teams {
+        font-family: $ms-font-family-fallbacks;
+    }
+}
+
+.welcome {
+    text-align: center;
+}
+
+.welcomeImage {
+    width: 100%;
+    max-width: 420px;
+}
+
+.links {
+    a {
+        text-decoration: none;
+        color: "[theme:link, default:#03787c]";
+        color: var(--link);
+        &:hover {
+            text-decoration: underline;
+            color: "[theme:linkHovered, default: #014446]";
+            color: var(--linkHovered);
+        }
+    }
+}
+
+.employees {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    margin: unset !important;
+    padding: 20px;
+}
+
+.employee {
+    position: relative;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 2px;
+    text-align: center;
+    flex: 0 0 calc(10% - 10px);
+    transition: transform 0.3s;
+    max-width: calc(10% - 10px);
+    min-width: 100px;
+}
+
+.employeeInfo {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.employee h2,
+.employee p,
+.employee h5 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    font-size: 0.8em;
+    margin: 2px 0;
+}
+
+.employee:hover {
+    transform: translateY(-3px);
+}
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    height: 25px;
+}
+
+.navButtons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.navButtons button {
+    padding: 3px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: relative;
+    width: 15px;
+    height: 15px;
+}
+
+.navButtons img {
+    width: 15px;
+    height: 15px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.csvExportButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    width: 15px;
+    height: 15px;
+}
+
+.csvExportButton img {
+    width: 15px;
+    height: 15px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.navTitle {
+    margin: 0;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding-left: 3%;
+}
+
+.profileImg {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.profileImg img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}
+
+.emailContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+    padding: 2px 0;
+}
+
+.emailWrapper {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.emailText {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 16px;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+
+.scrollContainer {
+    color: inherit;
+}
+
+.tableBody {
+    color: inherit;
+}
+
+.tableRow {
+    color: inherit;
+}
+
+.headerRow {
+    color: inherit;
+}
+
+.tableCell {
+    color: inherit;
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 5px;
+    button {
+        padding: 2px;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+.qrActions {
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
+    button {
+        padding: 1px;
+        img {
+            width: 15px;
+            height: 15px;
+        }
+    }
+}
+
+.qrContainer {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 10;
+}
+
+.qrToggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 15px;
+    height: 15px;
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.qrCode {
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 0;
+    background: white;
+    padding: 3px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100px;
+    height: auto;
+    font-size: 0.8em;
+    padding-top: 15px;
+}
+
+.qrCode p {
+    margin: 2px 0;
+    font-size: 0.7em;
+}
+
+.qrCloseButton {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.qrCloseContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    height: 15px;
+    align-items: center;
+}
+
+.userCount {
+    margin: 0 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.nameSection {
+    min-height: 3px;
+    font-size: 15px !important;
+}
+
+.infoSection {
+    display: flex;
+    flex-direction: column;
+    min-height: 3px;
+    font-size: 12px !important;
+}
+
+.orgTree {
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: $ms-color-themePrimary;
+    }
+}
+
+.treeNode {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 20px;
+    
+    // marginLeft: `${level * 20}px`, display: "flex", flexDirection: "column",alignItems: "flex-start"
+}
+
+.nodeContent {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.expandIcon {
+    margin-right: 5px;
+}
+
+.nodeName {
+    font-weight: bold;
+}
+
+.nodeTitle {
+    margin-left: 10px;
+    color: grey;
+}
+
+.childNodes {
+    margin-left: 20px; // Indent the child nodes
+    border-left: 1px solid #ccc; // Optional, adds a vertical line to indicate hierarchy
+    padding-left: 10px;
+}
+
+.modalContainer {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; // Handle content overflow
+    max-height: fit-content; // Limit the modal height to fit within the viewport
+}
