@@ -596,7 +596,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
     }
     setShowOrgTree(true); // Open the modal
   };
-  
+
   const userMap = new Map<string, IOrgTreeNode>();
   const buildHierarchy = (root : IOrgTreeNode) : void => {
     // Loop through each user to find direct reports to the current root
@@ -613,6 +613,8 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
       }
     });
   }
+
+  
 
   const OrgTree: React.FC<{ users: IUser[]; selectedUser?: IUser }> = ({
     users,
