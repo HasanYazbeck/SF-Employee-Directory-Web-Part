@@ -11,35 +11,13 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import { ThemeProvider, ThemeChangedEventArgs } from '@microsoft/sp-component-base';
 
 import * as strings from 'EmployeeDirectoryWebPartStrings';
-import EmployeeDirectory from './components/EmployeeDirectory';
-import { IEmployeeDirectoryComponentsProps } from './components/EmployeeDirectory';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-import { IUser } from './components/EmployeeDirectory';
-
-export interface IEmployeeDirectoryWebPartProps {
-  description: string;
-  usersPerPage: number;
-}
-
-interface IGraphUserResponse {
-  id: string;
-  displayName: string;
-  mail: string;
-  department?: string;
-  jobTitle?: string;
-  mobilePhone?: string;
-  officeLocation?: string;
-  manager?: {
-    displayName: string;
-    id: string;
-  };
-}
-
-interface IGraphResponse {
-  value: IGraphUserResponse[];
-  '@odata.nextLink'?: string;
-}
-
+import { IEmployeeDirectoryComponentsProps, 
+         IEmployeeDirectoryWebPartProps, 
+         IGraphResponse, 
+         IGraphUserResponse, 
+         IUser } from './components/IEmployeeDirectoryProps';
+import EmployeeDirectory from './components/EmployeeDirectory';  // Add this import
 
 export default class EmployeeDirectoryWebPart extends BaseClientSideWebPart<IEmployeeDirectoryWebPartProps> {
   private _users: IUser[] = [];
@@ -66,17 +44,19 @@ export default class EmployeeDirectoryWebPart extends BaseClientSideWebPart<IEmp
   }
 
   public render(): void {
+    
     const element: React.ReactElement<IEmployeeDirectoryComponentsProps> = React.createElement(
       EmployeeDirectory,
       {
         users: this._users,
         usersPerPage: this.properties.usersPerPage,
         siteUrl: this.context.pageContext.web.absoluteUrl,
-        themeVariant: this._themeVariant
+        themeVariant: this._themeVariant,
+        context: this.context
       }
     );
-
     ReactDom.render(element, this.domElement);
+   
   }
 
 
@@ -144,11 +124,9 @@ export default class EmployeeDirectoryWebPart extends BaseClientSideWebPart<IEmp
       console.error('Error fetching users:', error);
       this._users = [];
     }
-    console.log("Users list:", this._users)
+    // console.log("Users list:", this._users)
     this.render();
   }
-
-
 
   protected onDispose(): void {
     ReactDom.unmountComponentAtNode(this.domElement);

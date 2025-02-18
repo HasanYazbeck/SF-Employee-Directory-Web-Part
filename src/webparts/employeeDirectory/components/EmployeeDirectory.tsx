@@ -12,7 +12,6 @@ import { Pagination } from "@material-ui/lab";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { CSVLink } from "react-csv";
-
 import { ThemeProvider, useTheme, ITheme } from "@fluentui/react";
 import {
   IconButton,
@@ -21,46 +20,15 @@ import {
   IButtonStyles,
   TooltipHost,
   DirectionalHint,
-  IIconProps,
-  Modal,
+  IIconProps
 } from "@fluentui/react";
-import { IReadonlyTheme } from "@microsoft/sp-component-base";
 import { mergeStyles } from "@fluentui/react/lib/Styling";
 import { MenuProps } from "@mui/material/Menu";
+import { IUser , IEmployeeDirectoryComponentsProps, IOrgTreeNode } from "./IEmployeeDirectoryProps";
+import  OrganizationalChart  from "./OrganizationalChart/OrganizationalChart";
+import { Modal } from "./Common/Modal/Modal";
 
 type StyleType = typeof profilestyle | typeof liststyle;
-
-export interface IUser {
-  displayName: string;
-  mail?: string;
-  department?: string;
-  jobTitle?: string;
-  phoneNumber?: string;
-  location?: string;
-  profileImageUrl?: string;
-  manager?: {
-    displayName: string;
-    id: string;
-  };
-  id: string;
-  [key: string]: string | boolean | undefined | { displayName: string; id: string };
-  isSelected: boolean;
-}
-
-interface IOrgTreeNode {
-  id: string;
-  displayName: string;
-  jobTitle?: string;
-  children: IOrgTreeNode[];
-  isSelected: boolean;
-}
-
-export interface IEmployeeDirectoryComponentsProps {
-  users: IUser[];
-  usersPerPage: number;
-  siteUrl: string;
-  themeVariant?: IReadonlyTheme | undefined;
-}
 
 function useDebounce(value: string, delay: number): string {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -99,6 +67,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
   users,
   usersPerPage,
   siteUrl,
+  context
 }) => {
   const iconsSize = 10;
   const topRef = useRef<HTMLDivElement>(null);
@@ -228,6 +197,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
       horizontal: "left",
     },
   };
+
   const menuItemStyle = {
     display: "block",
     width: "100%",
@@ -262,10 +232,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
   const debouncedSearchFilter = useDebounce(searchFilterInput, 300);
   const [activeStyle, setActiveStyle] = useState("profile");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-
-  const resetPage = (): void => {
-    setCurrentPage(1);
-  };
+  const resetPage = (): void => {setCurrentPage(1);};
 
   const handleStyleChange = (style: StyleType, styleName: string): void => {
     setCurrentStyle(style);
@@ -335,13 +302,8 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
         : false;
     };
 
-    const includesSubstring = (
-      value: string | undefined,
-      substring: string
-    ): boolean => {
-      return value
-        ? value.toLowerCase().includes(substring.toLowerCase())
-        : false;
+    const includesSubstring = (value: string | undefined,substring: string): boolean => {
+      return value? value.toLowerCase().includes(substring.toLowerCase()): false;
     };
 
     const departmentMatch = !departmentFilter || matchesPrefix(user.department, departmentFilter);
@@ -394,7 +356,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
     }
   }, [filteredUserCount]);
 
-  const uniqueDepartments = Array.from(new Set(users.map((user) => user.department).filter(Boolean)) );
+  const uniqueDepartments = Array.from(new Set(users.map((user) => user.department).filter(Boolean)));
   const uniqueTitles = Array.from(new Set(users.map((user) => user.jobTitle).filter(Boolean)));
 
   const getCurrentPageItems = (): IUser[] => {
@@ -407,6 +369,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
   const totalPages = Math.ceil(users.filter(filterUsers).length / usersPerPage);
   const navBarRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
+
   const closeQRCode = (event: MouseEvent): void => {
     const target = event.target as HTMLElement;
 
@@ -570,6 +533,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
       users.forEach(user => {
         if (user.isSelected) {
           user.isSelected = false;
+          setSelectedUser(null);
         }
       });
       setShowOrgTree(false);
@@ -579,13 +543,12 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
     }
   };
 
-
   const openOrgTree = (user: IUser) => {
     // const manager = user.manager; // Get the manager from the selected user
     if (user !== null && user.manager !== undefined) {
       user.isSelected = true;
       // If the user has a manager, find the manager in the users list
-      // const managerUser = users.find((u) => u.id === manager.id);
+      // const managerUser = users.find((u) => u.id === managerId);
       setSelectedUser(user || null); // Set the manager as the selected user
     } else if(user.id && user.manager === undefined){
       user.isSelected = true;
@@ -614,109 +577,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
     });
   }
 
-  
-
-  const OrgTree: React.FC<{ users: IUser[]; selectedUser?: IUser }> = ({
-    users,
-    selectedUser,
-  }) => {
-    const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
-
-    const buildOrgTree = (users: IUser[]): IOrgTreeNode | null => {
-
-      users.forEach((user) => {
-        userMap.set(user.id, 
-          {
-          id: user.id,
-          displayName: user.displayName,
-          jobTitle: user.jobTitle,
-          children: [],
-          isSelected: user.isSelected
-        });
-      });
-
-      let root: IOrgTreeNode | null = null;
-
-      // Find the manager of the selected user and set the manager as the root
-      if (selectedUser && selectedUser.manager && selectedUser.manager.id) {
-        const managerNode = userMap.get(selectedUser.manager.id);
-        const selectedNode = userMap.get(selectedUser.id);
-        if (managerNode && selectedNode) {
-          // Set the manager as the root
-          root = managerNode;
-          // Add the selected user as a child of their manager
-          managerNode.children.push(selectedNode);
-        }
-
-      // Build the rest of the organization tree for other users
-      users.forEach((user) => {
-        const node = userMap.get(user.id);
-        if (node) {
-          if (user.manager && user.manager.id && userMap.has(user.manager.id)) {
-            const managerNode = userMap.get(user.manager.id);
-            if (managerNode && managerNode !== root) {
-              managerNode.children.push(node);
-            }
-          }
-        }
-      });
-      }
-
-      else if(selectedUser && selectedUser.manager === undefined){
-        const ceoNode = userMap.get(selectedUser.id);
-        if (ceoNode) {
-          root = ceoNode;
-          buildHierarchy(ceoNode);
-        }
-      }
-      return root;
-    };
-
-      
- 
-    
-    const toggleNodeExpansion = (nodeId: string): void => {
-      setExpandedNodes((prevState) => ({
-        ...prevState,
-        [nodeId]: !prevState[nodeId],
-      }));
-    };
-
-    const TreeNode: React.FC<{ node: IOrgTreeNode; level: number }> =
-      React.memo(({ node, level }) => {
-        const isExpanded = expandedNodes[node.id] !== undefined ? expandedNodes[node.id] : true;
-        return (
-          <div style={{marginLeft: `${level * 20}px`,}} className={currentStyle.treeNode}>
-            <div className={currentStyle.nodeContent} 
-              onClick={() =>  toggleNodeExpansion(node.id)} role="button" tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && toggleNodeExpansion(node.id)}
-              aria-expanded={isExpanded} aria-label={`Toggle ${node.displayName}'s subtree`}
-              style={{ backgroundColor:  node.isSelected ? theme.palette.themePrimary : "#FFFFFF" ,border: "1px solid #e0e0e0",
-                borderRadius: "8px",boxShadow: "0 2px 5px rgba(0,0,0,0.1)",padding: "10px",
-                margin: "5px 0",transition: "background-color 0.2s",width: "250px", // Fixed width to align the nodes
-              }}>
-              <span className={currentStyle.expandIcon} style={{ marginRight: "10px" }}>{node.children.length > 0 && (isExpanded ? "▼" : "▶")}</span>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <span className={currentStyle.nodeName} style={{ fontWeight: "bold", color: "#333" }}>{node.displayName}</span>
-                <span className={currentStyle.nodeTitle} style={{ color: "#666" }}>{node.jobTitle}</span>
-              </div>
-            </div>
-            {isExpanded && node.children.length > 0 && (
-              <div className={currentStyle.childNodes}style={{ paddingLeft: "20px" }}>
-                {node.children.map((child) => (<TreeNode key={child.id} node={child} level={level+1 } />))}</div>
-            )}
-          </div>
-        );
-      });
-
-    const orgTree = buildOrgTree(users);
-    return (
-      <div className={currentStyle.orgTree}>{selectedUser && <h2>Organizationals Tree</h2>}
-        {orgTree ? (<TreeNode node={orgTree} level={0} />) : (<p>No organizational data available.</p>)}
-      </div>
-    );
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <div key={`${departmentFilter}-${titleFilter}-${searchFilter}-${nameFilter}`} ref={topRef}>
@@ -738,16 +598,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
             <TooltipHost content="Export to CSV" directionalHint={DirectionalHint.bottomCenter} >
               <CSVExportButton />
             </TooltipHost>
-            {/* <TooltipHost
-              content="Show Org Tree"
-              directionalHint={DirectionalHint.bottomCenter}
-            >
-              <NavButton
-                iconName="Org"
-                onClick={toggleOrgTree}
-                isActive={showOrgTree}
-              />
-            </TooltipHost> */}
           </div>
         </div>
         <div style={filterContainerStyle}>
@@ -767,15 +617,10 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
             ))}
           </StyledTextField>
 
-          <StyledTextField
-            select
-            label="Job Title"
-            value={titleFilter}
-            onChange={handleTitleFilterChange}
-            variant="outlined"
-            style={filterFieldStyle}
-            SelectProps={{ MenuProps: menuProps }}
-          >
+          <StyledTextField select label="Job Title"
+            value={titleFilter} onChange={handleTitleFilterChange}
+            variant="outlined" style={filterFieldStyle}
+            SelectProps={{ MenuProps: menuProps }}>
             {uniqueTitles.map((option) => (
               <MenuItem key={option} value={option} style={menuItemStyle}>
                 {option}
@@ -783,28 +628,15 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
             ))}
           </StyledTextField>
 
-          <TextField
-            label="Search"
-            value={searchFilterInput}
-            onChange={handleSearchFilterChange}
-            variant="outlined"
-            style={filterFieldStyle}
-            inputRef={searchInputRef}
-          />
+          <TextField label="Search" value={searchFilterInput}
+            onChange={handleSearchFilterChange} variant="outlined"
+            style={filterFieldStyle} inputRef={searchInputRef}/>
 
-          <TextField
-            label="Name"
-            value={nameFilterInput}
-            onChange={handleNameFilterChange}
-            variant="outlined"
-            style={filterFieldStyle}
-            inputRef={nameInputRef}
-          />
+          <TextField label="Name" value={nameFilterInput}
+            onChange={handleNameFilterChange} variant="outlined"
+            style={filterFieldStyle} inputRef={nameInputRef}/>
 
-          <TooltipHost
-            content="Clear Filters"
-            directionalHint={DirectionalHint.bottomCenter}
-          >
+          <TooltipHost content="Clear Filters" directionalHint={DirectionalHint.bottomCenter}>
             <IconButton
               iconProps={clearFilterIcon}
               onClick={clearFilters}
@@ -921,8 +753,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
                   </div>
 
                   <div className={currentStyle.emailContainer}>
-                    {user.mail && (
-                      <IconButton iconProps={{ iconName: "Mail" }}
+                    {user.mail && (<IconButton iconProps={{ iconName: "Mail" }}
                         href={`https://outlook.office.com/mail/deeplink/compose?to=${user.mail}`}
                         styles={getIconButtonStyles()} ariaLabel={`Send email to ${user.displayName}`}/>
                     )}
@@ -947,12 +778,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
                   <TooltipHost content="Email in Outlook" directionalHint={DirectionalHint.bottomCenter}>
                     <IconButton iconProps={{ iconName: "OutlookLogo" }}
                       onClick={() => window.open(`https://outlook.office.com/mail/deeplink/compose?to=${user.mail}`)}
-                      styles={{
-                        icon: {
-                          fontSize: "18px",
-                          height: "18px",
-                        },
-                      }}
+                      styles={{icon: {fontSize: "18px",height: "18px"}}}
                     />
                   </TooltipHost>
                 </div>
@@ -965,13 +791,22 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryComponentsProps> = ({
           <CustomPagination count={totalPages}  page={currentPage} onChange={handlePageChange}/>
         </div>
       </div>
-      <Modal isOpen={showOrgTree} onDismiss={toggleOrgTree} isBlocking={false} containerClassName={currentStyle.modalContainer}>
-        {selectedUser ? (<OrgTree users={users} selectedUser={selectedUser} />) : (
-          <p style={{textAlign:"center"}}>No manager found.</p>
-        )}
+
+      <Modal showModal={showOrgTree}
+             modalTitle={'Organization Chart'}
+             showModalTitle={true}
+             onClose={toggleOrgTree}
+             onSave={() => {
+              // Intentionally empty
+              }}
+             modalClassSize={'modal-xl'}>
+             {selectedUser ? (
+              <OrganizationalChart context={context} employee={selectedUser || undefined} users={users} withSearch={false} />
+              ) : ( <p style={{textAlign:"center"}}>No manager found.</p>)
+            }
       </Modal>
     </ThemeProvider>
   );
-};
+}
 
 export default EmployeeDirectory;
