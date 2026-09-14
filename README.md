@@ -1,73 +1,115 @@
-# sf-employee-directory-webpart
+# SF Employee Directory Web Part
 
 ## Summary
 
-Short summary on functionality and used technologies.
+This SharePoint Framework web part displays a modern employee directory for Microsoft 365 users. It pulls employee data from Microsoft Graph, supports multiple viewing modes, and provides search, filtering, export, QR code generation, and organization chart navigation for quick access to contact and reporting information.
 
-[picture of the solution in action, if possible]
+## Web Part Demo
 
-## Used SharePoint Framework Version
+![Bootstrap Slider Web Part Demo](./src/assets/employee-directory-webpart.gif)
 
-![version](https://img.shields.io/badge/version-1.19.0-green.svg)
+## Used versions
+
+| Tool                            | Version                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| SharePoint Framework (SPFx)     | 1.19.0                                                                                     |
+| @microsoft/generator-sharepoint | 1.19.0                                                                                     |
+| Node.js                         | 18.20.4 (project generated with this version; package engine supports `>=18.17.1 <19.0.0`) |
+| Gulp                            | 4.0.2                                                                                      |
+| TypeScript                      | 4.7.4                                                                                      |
+| React                           | 17.0.1                                                                                     |
 
 ## Applies to
 
 - [SharePoint Framework](https://aka.ms/spfx)
 - [Microsoft 365 tenant](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
+- [Microsoft Graph](https://learn.microsoft.com/en-us/graph/)
 
-> Get your own free development tenant by subscribing to [Microsoft 365 developer program](http://aka.ms/o365devprogram)
+> Get your own free development tenant by subscribing to the [Microsoft 365 Developer Program](http://aka.ms/o365devprogram).
 
 ## Prerequisites
 
-> Any special pre-requisites?
+Before running the solution locally, make sure you have:
+
+- Node.js 18.x (recommended: 18.20.4)
+- npm
+- A Microsoft 365 developer tenant or SharePoint Online environment
+- A modern browser for local workbench testing
 
 ## Solution
 
-| Solution    | Author(s)                                               |
-| ----------- | ------------------------------------------------------- |
-| folder name | Author details (name, company, twitter alias with link) |
+| Solution     | Details                                   |
+| ------------ | ----------------------------------------- |
+| Project Name | SF Employee Directory Web Part            |
+| Type         | SharePoint Framework client-side web part |
+| Data Source  | Microsoft Graph /directory users API      |
+
+## Features
+
+This web part includes the following capabilities:
+
+- Employee directory powered by Microsoft Graph
+- List and profile layout modes
+- Department, job title, name, and full-text search filters
+- Pagination for large user lists
+- CSV export of the currently filtered employee list
+- Profile photos with initials fallback when image is unavailable
+- Quick actions for:
+  - sending mail
+  - opening Teams chat
+  - opening Outlook compose
+  - viewing user profile information
+- QR code generation for employee contact cards
+- QR code download and sharing support
+- Organization chart modal for manager hierarchy navigation
+- Theme-aware Fluent UI styling
+
+## How it works
+
+The web part performs the following steps when it loads:
+
+1. Requests user data from Microsoft Graph using the SPFx MSGraphClientV3 factory.
+2. Loads employee profile photos where available.
+3. Builds manager relationships and prepares the employee hierarchy.
+4. Renders the directory in either list view or profile view.
+5. Applies filters and pagination on the client side.
+6. Allows exporting or sharing employee data in a user-friendly format.
+
+## Minimal path to awesome
+
+1. Clone this repository.
+2. Open the solution folder in a terminal.
+3. Run the following commands:
+
+```bash
+npm install
+gulp serve
+```
+
+4. Open the SharePoint Workbench or a SharePoint page where the web part is deployed.
+
+## Build and package commands
+
+```bash
+npm install
+gulp build
+gulp bundle
+gulp package-solution
+```
 
 ## Version history
 
-| Version | Date             | Comments        |
-| ------- | ---------------- | --------------- |
-| 1.1     | March 10, 2021   | Update comment  |
-| 1.0     | January 29, 2021 | Initial release |
+| Version | Date               | Comments                                                              |
+| ------- | ------------------ | --------------------------------------------------------------------- |
+| 1.0     | September 14, 2026 | Updated README with current project functionality and version details |
 
 ## Disclaimer
 
 **THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
----
-
-## Minimal Path to Awesome
-
-- Clone this repository
-- Ensure that you are at the solution folder
-- in the command-line run:
-  - **npm install**
-  - **gulp serve**
-
-> Include any additional steps as needed.
-
-## Features
-
-Description of the extension that expands upon high-level summary above.
-
-This extension illustrates the following concepts:
-
-- topic 1
-- topic 2
-- topic 3
-
-> Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
-
-> Share your web part with others through Microsoft 365 Patterns and Practices program to get visibility and exposure. More details on the community, open-source projects and other activities from http://aka.ms/m365pnp.
-
 ## References
 
-- [Getting started with SharePoint Framework](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
-- [Building for Microsoft teams](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/build-for-teams-overview)
-- [Use Microsoft Graph in your solution](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/using-microsoft-graph-apis)
-- [Publish SharePoint Framework applications to the Marketplace](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/publish-to-marketplace-overview)
-- [Microsoft 365 Patterns and Practices](https://aka.ms/m365pnp) - Guidance, tooling, samples and open-source controls for your Microsoft 365 development
+- [Getting started with SharePoint Framework](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
+- [SharePoint Framework overview](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/sharepoint-framework-overview)
+- [Use Microsoft Graph in your solution](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/using-microsoft-graph-apis)
+- [Microsoft 365 Patterns and Practices](https://aka.ms/m365pnp)
